@@ -1,37 +1,47 @@
 const path = require('path');
-const webpack = require('webpack');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
-    name: 'word-relay-setting',
+    name: 'number-baseball',
     mode: 'development',
-    devtool: 'eval',
+    devtool: 'inline-source-map',
     resolve: {
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.jsx'],
     },
     entry: {
-        app: ['./client'],
-    }, //입력
+        app: './client',
+    },
     module: {
         rules: [{
-            test: /\.jsx?/,
+            test: /\.jsx?$/,
             loader: 'babel-loader',
             options: {
                 presets: [
                     ['@babel/preset-env', {
-                        targets: {
-                            browsers: ['> 1% in KR'], // browserslist
-                        },
+                        targets: {browsers: ['> 1% in KR']}, //browserList
                         debug: true,
-                    }], '@babel/preset-react'
-                ]
+                    }],
+                    '@babel/preset-react',
+                ],
+                plugins: [
+                    '@babel/plugin-proposal-class-properties',
+                    'react-refresh/babel'   //변경점 바로 적용
+                ],
             },
+            exclude: path.join(__dirname, 'node_modules'),
         }],
     },
     plugins: [
-        new webpack.LoaderOptionsPlugin({ debug: true }),
+        new ReactRefreshWebpackPlugin(),    //변경점 바로 적용
     ],
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'app.js'
-    }, //출력
+        filename: '[name].js',
+        publicPath: '/dist',    //express.static과 비슷 가상의 경로
+    },
+    devServer: {
+        devMiddleware: { publicPath: '/dist' },
+        static: { directory: path.resolve(__dirname) },
+        hot: true
+    }
 };
