@@ -1,14 +1,14 @@
-import React, { Component } from "react";
+import React, {memo} from "react";
 
-class Try extends Component {
-    render() {
-        return(
-            <li>
-                <div>{this.props.tryInfo.try}</div>
-                <div>{this.props.tryInfo.result}</div>
-            </li>
-        )
-    }
-}
+//memo 사용하여 불필요한 리렌더링 방지
+const Try = memo(({tryInfo}) => {
+    return(
+        <li>
+            <div>{tryInfo.try}</div>
+            <div>{tryInfo.result}</div>
+        </li>
+    )
+});
+Try.displayName = 'Try';
 
 export default Try;
